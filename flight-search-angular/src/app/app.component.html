@@ -1,0 +1,126 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="text-blue text-center">Welcome to {{ title }}!</h1>
+    <hr />
+
+	<div class="radio">  
+	   <label>  
+	       <input type="radio" name="radio" value="Flight" (click)="setRadio('Flight')" [checked]='true' ngModel>  
+	      Search by Flight Number
+	  </label>  
+	</div>  
+	<div class="radio">  
+	 <label>  
+	    <input type="radio" name="radio" value="City" (click)="setRadio('City')" ngModel>  
+	        Search by City
+	  </label>  
+	</div>  						
+
+	<div *ngIf="isSelected('Flight')">
+	<form #searchForm="ngForm" (ngSubmit)="getFlights(searchForm.value)" novalidate>
+		<table class="table table-bordered table-hover">
+			<tbody>
+				<tr>
+					<td>
+						<label for="fNum" style="text-align: left; width: 30%">Flight Number: </label>
+						<input type="text" class="form-control" name="fNum" [(ngModel)]="model.fNum" #fNum="ngModel" [ngClass]="{ 'is-invalid': fNum.touched && fNum.invalid }" minlength="4" maxlength="4" required />
+						<div *ngIf="fNum.invalid" class="invalid-feedback">
+                            <div *ngIf="fNum.errors.required">Flight Number is required</div>
+                            <div *ngIf="fNum.errors.minlength || fNum.errors.maxlength">Flight Number must be at least 4 numeric characters</div>
+                        </div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="date" style="text-align: left;">Date (yyyy-mm-dd): </label>
+						<input type="text" class="form-control" name="date" [(ngModel)]="model.date" #date="ngModel" [ngClass]="{ 'is-invalid': date.touched && date.invalid }" pattern="" required />
+						<div *ngIf="date.invalid" class="invalid-feedback">
+                            <div *ngIf="date.errors.required">Date is required</div>
+                            <div *ngIf="date.errors.pattern">Date must be at least 4 characters</div>
+                        </div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	    <div id="fetchbtn">
+	      <input type="submit" [disabled] = "searchForm.invalid" class="btn btn-outline-success" value="Search" >
+	    </div>
+	    <div><small class="text-info">Click the button to get flights based on search!</small></div>
+	    </form>
+	</div>
+
+	<div *ngIf="isSelected('City')">
+	<form #searchCityForm="ngForm" (ngSubmit)="getFlights(searchCityForm.value)" novalidate>
+		<table class="table table-bordered table-hover">
+			<tbody>
+				<tr>
+					<td>
+						<label for="ori" style="text-align: left; width: 30%">Origin: </label>
+						<input type="text" class="form-control" name="ori" [(ngModel)]="model.ori" #ori="ngModel" [ngClass]="{ 'is-invalid': ori.touched && ori.invalid}" minlength="3" maxlength="3" required />
+						<div *ngIf="ori.invalid" class="invalid-feedback">
+                            <div *ngIf="ori.errors.required">Origin is required</div>
+                            <div *ngIf="ori.errors.minlength || ori.errors.maxlength">Origin must be at least 3 alphabetical characters</div>
+                        </div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="dest" style="text-align: left; width: 30%">Destination: </label>
+						<input type="text" class="form-control" name="dest" [(ngModel)]="model.dest" #dest="ngModel" [ngClass]="{ 'is-invalid': dest.touched && dest.invalid }" minlength="3" maxlength="3" required />
+						<div *ngIf="dest.invalid" class="invalid-feedback">
+                            <div *ngIf="dest.errors.required">Destination is required</div>
+                            <div *ngIf="dest.errors.minlength || dest.errors.maxlength">Destination must be at least 3 alphabetical characters</div>
+                        </div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="date" style="text-align: left;">Date (yyyy-mm-dd): </label>
+						<input type="text" class="form-control" name="date" [(ngModel)]="model.date" #date="ngModel" [ngClass]="{ 'is-invalid': date.touched && date.invalid }" pattern="" required />
+						<div *ngIf="date.invalid" class="invalid-feedback">
+                            <div *ngIf="date.errors.required">Date is required</div>
+                            <div *ngIf="date.errors.pattern">Date must be at least 4 characters</div>
+                        </div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	    <div id="fetchbtn">
+	      <input type="submit" [disabled] = "searchCityForm.invalid" class="btn btn-outline-success" value="Search" >
+	    </div>
+	    <div><small class="text-info">Click the button to get flights based on search!</small></div>
+	    </form>
+	</div>
+
+    <div *ngIf="myresponse">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <th>Flight Info</th>
+          <th>Origin</th>
+          <th>Destination</th>
+          <th>Travel Time</th>
+          <th>Total Miles</th>
+          <th>Status</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let flight of myresponse">
+            <td>Flight Info: {{flight.carrier}}{{flight.flightNumber}}<br>{{flight.aircraft}}</td>
+            <td>{{flight.origin}}<br>Departure: {{flight.departure}}</td>
+            <td>{{flight.destination}}<br>Arrival: {{flight.arrival}}</td>
+            <td>{{flight.travelTime}}</td>
+            <td>{{flight.distance}} miles</td>
+            <td>{{flight.status}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+
+</html>
